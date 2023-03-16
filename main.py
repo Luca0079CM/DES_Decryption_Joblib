@@ -170,11 +170,11 @@ def encryption_and_decryption_parallel(lines, job):
     is_correct = True
     tables_filler()
     round_keys = generate_keys()
-    Parallel(n_jobs=job)(delayed(boh)(line, round_keys) for line in lines)
+    Parallel(n_jobs=job)(delayed(single_en_dec)(line, round_keys) for line in lines)
     return is_correct
 
 
-def boh(line, round_keys):
+def single_en_dec(line, round_keys):
     reverse_keys(round_keys)
     pt = convert_string_to_binary(line)
     ct = DES(pt, round_keys)
@@ -192,14 +192,33 @@ def boh(line, round_keys):
 
 
 if __name__ == '__main__':
+    n_test = 2
     file = open('password.txt', 'r')
     Lines = file.readlines()
     start_time = time.time()
-    encryption_and_decryption_sequential(Lines)
+    encryption_and_decryption_sequential(Lines[0:5000])
     end_time = time.time()
     print(f'Tempo per decriptazione sequenziale: {end_time - start_time:.3f} s')
+    # Test con 5000 password aumentando il numero di thread
     for i in range(2, 9, 1):
+        test_time = 0
+        for j in range(n_test):
+            start_time = time.time()
+            encryption_and_decryption_parallel(Lines[0:5000], i)
+            end_time = time.time()
+            test_time += end_time - start_time
+        print(f'Tempo per decriptazione parallela con {i} jobs: {test_time/n_test:.3f} s')
+
+    # Test aumentando il numero di password sequenziale:
+    for i in range(5000, 11000, 1000):
         start_time = time.time()
-        encryption_and_decryption_parallel(Lines, i)
+        encryption_and_decryption_sequential(Lines[0:i])
         end_time = time.time()
-        print(f'Tempo per decriptazione parallela con {i} jobs: {end_time - start_time:.3f} s')
+        print(f'Tempo per decriptazione sequenziale di {i} password: {end_time - start_time:.3f} s')
+
+    # Test aumentando il numero di password con 4 thread
+    for i in range(5000, 11000, 1000):
+        start_time = time.time()
+        encryption_and_decryption_parallel(Lines[0:i], 4)
+        end_time = time.time()
+        print(f'Tempo per decriptazione parallela con 4 jobs di {i} password: {end_time - start_time:.3f} s')
