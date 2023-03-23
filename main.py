@@ -192,7 +192,7 @@ def single_en_dec(line, round_keys):
 
 
 if __name__ == '__main__':
-    n_test = 2
+    n_test = 5
     file = open('password.txt', 'r')
     Lines = file.readlines()
     start_time = time.time()
@@ -200,7 +200,7 @@ if __name__ == '__main__':
     end_time = time.time()
     print(f'Tempo per decriptazione sequenziale: {end_time - start_time:.3f} s')
     # Test con 5000 password aumentando il numero di thread
-    for i in range(2, 9, 1):
+    for i in range(2, 17, 1):
         test_time = 0
         for j in range(n_test):
             start_time = time.time()
