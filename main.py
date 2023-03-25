@@ -207,7 +207,7 @@ if __name__ == '__main__':
             encryption_and_decryption_parallel(Lines[0:5000], i)
             end_time = time.time()
             test_time += end_time - start_time
-        print(f'Tempo per decriptazione parallela con {i} jobs: {test_time/n_test:.3f} s')
+        print(f'Tempo per decriptazione parallela con {i} threads: {test_time/n_test:.3f} s')
 
     # Test aumentando il numero di password sequenziale:
     for i in range(5000, 11000, 1000):
@@ -221,4 +221,4 @@ if __name__ == '__main__':
         start_time = time.time()
         encryption_and_decryption_parallel(Lines[0:i], 4)
         end_time = time.time()
-        print(f'Tempo per decriptazione parallela con 4 jobs di {i} password: {end_time - start_time:.3f} s')
+        print(f'Tempo per decriptazione parallela con 4 threads di {i} password: {end_time - start_time:.3f} s')
